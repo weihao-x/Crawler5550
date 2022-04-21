@@ -20,38 +20,38 @@ public class Exporter {
         }
 
         System.out.println("Exporter starting");
-//        String envPath = args[0];
-//        String outputPath = args[1];
-//        
-//        StorageInterface db = null;
-//		try {
-//			db = StorageFactory.getDatabaseInstance(envPath);
-//		} catch (DatabaseException | IllegalArgumentException | FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		System.out.println(db.getCorpusSize());
-//		
-//		if (!Files.exists(Paths.get(outputPath))) {
-//            try {
-//                Files.createDirectory(Paths.get(outputPath));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//		
-//		for (String url : db.allUrls()) {
-//			FileWriter myWriter;
-//			try {
-//				myWriter = new FileWriter(outputPath + "/" + UUID.randomUUID().toString());
-//				myWriter.write(url + "\n");
-//				myWriter.write(db.getDocument(url));
-//			    myWriter.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}		    
-//		}
-//
-//        db.close();
+        String envPath = args[0];
+        String outputPath = args[1];
+        
+        StorageInterface db = null;
+		try {
+			db = StorageFactory.getDatabaseInstance(envPath);
+		} catch (DatabaseException | IllegalArgumentException | FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(db.getCorpusSize());
+		
+		if (!Files.exists(Paths.get(outputPath))) {
+            try {
+                Files.createDirectory(Paths.get(outputPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+		
+		for (String url : db.allUrls()) {
+			FileWriter myWriter;
+			try {
+				myWriter = new FileWriter(outputPath + "/" + UUID.randomUUID().toString());
+				myWriter.write(url + "\n");
+				myWriter.write(db.getDocument(url));
+			    myWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}		    
+		}
+
+        db.close();
 	}
 }
