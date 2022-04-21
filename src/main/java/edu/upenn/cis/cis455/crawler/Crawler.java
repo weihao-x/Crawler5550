@@ -50,7 +50,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Crawler implements CrawlMaster {
 	static final Logger logger = LogManager.getLogger(Crawler.class);
 	
-    static final int NUM_WORKERS = 20;
+    static final int NUM_WORKERS = 4;
     
     protected List<Thread> crawlWorkers;
     private AtomicInteger exited;
