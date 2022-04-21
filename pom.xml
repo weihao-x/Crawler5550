@@ -155,24 +155,35 @@
               <artifactId>exec-maven-plugin</artifactId>
               <version>1.6.0</version>
               <executions>
-              <execution>
-                <id>crawler</id>
-                <goals><goal>java</goal></goals>
-              <configuration>
-                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
-                <arguments>
-                  <argument>https://en.wikipedia.org/</argument>
-                  <argument>./database</argument>
-                  <argument>10</argument>
-                  <argument>10000</argument>
-                </arguments>
-				<cleanupDaemonThreads>false</cleanupDaemonThreads>
-              </configuration>
-              </execution>
-              <execution>
-                <id>web</id>
-                <goals><goal>java</goal></goals>
-			  </execution>
+	            <execution>
+	              <id>crawler</id>
+	              <goals><goal>java</goal></goals>
+	              <configuration>
+	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
+	                <arguments>
+	                  <argument>https://en.wikipedia.org/</argument>
+	                  <argument>./database</argument>
+	                  <argument>10</argument>
+	                  <argument>10000</argument>
+	                </arguments>
+				    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+	              </configuration>
+	            </execution>
+                <execution>
+                  <id>web</id>
+                  <goals><goal>java</goal></goals>
+			    </execution>
+				<execution>
+                  <id>export</id>
+                  <goals><goal>java</goal></goals>
+				  <configuration>
+	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
+	                <arguments>
+	                  <argument>./database</argument>
+	                  <argument>./output</argument>
+	                </arguments>
+	              </configuration>
+			    </execution>
               </executions>
               <configuration>
                 <mainClass>edu.upenn.cis.cis455.crawler.WebInterface</mainClass>

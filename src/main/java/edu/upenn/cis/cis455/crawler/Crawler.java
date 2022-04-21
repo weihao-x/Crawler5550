@@ -483,39 +483,17 @@ public class Crawler implements CrawlMaster {
 			e.printStackTrace();
 		}
 
-//        Crawler crawler = new Crawler(startUrl, null, size, count, envPath);
-//
-//        System.out.println("Starting crawl of " + count + " documents, starting at " + startUrl);
-//        crawler.start();
-//
-//        while (!crawler.isDone())
-//            try {
-//                Thread.sleep(10);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-		
-		System.out.println(db.getCorpusSize());
-		
-		if (!Files.exists(Paths.get("./output"))) {
+        Crawler crawler = new Crawler(startUrl, null, size, count, envPath);
+
+        System.out.println("Starting crawl of " + count + " documents, starting at " + startUrl);
+        crawler.start();
+
+        while (!crawler.isDone())
             try {
-                Files.createDirectory(Paths.get("./output"));
-            } catch (IOException e) {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-		
-		for (String url : db.allUrls()) {
-			FileWriter myWriter;
-			try {
-				myWriter = new FileWriter("./output/" + UUID.randomUUID().toString());
-				myWriter.write(url + "\n");
-				myWriter.write(db.getDocument(url));
-			    myWriter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}		    
-		}
 
         db.close();
         System.out.println("Done crawling!");
