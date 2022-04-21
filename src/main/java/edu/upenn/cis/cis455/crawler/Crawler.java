@@ -182,7 +182,7 @@ public class Crawler implements CrawlMaster {
 		    				
 		    				// If url has been visited
 		    				if (StorageFactory.getDatabaseInstance(envPath).containsUrl(url)) {
-		    					logger.info(url + ": visited");
+		    					logger.debug(url + ": visited");
 		    					con_head.setIfModifiedSince(StorageFactory.getDatabaseInstance(envPath).getLastModified(url));
 		    					synchronized(sHelper) {
 		    						con_head.connect();
@@ -252,6 +252,7 @@ public class Crawler implements CrawlMaster {
 			    					WebDriverManager.chromedriver().setup();
 			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
 			    			    	System.setProperty("webdriver.chrome.whitelistedIps", "");
+			    			    	System.setProperty("webdriver.chrome.silentOutput", "true");
 			    			    	
 			    			    	ChromeOptions options = new ChromeOptions();
 			    			    	options.setHeadless(true);
@@ -294,7 +295,7 @@ public class Crawler implements CrawlMaster {
 			    							queue.add(link.attr("abs:href"));
 			    						}
 			    						else {
-			    							logger.info(link.attr("abs:href") + ": disallow page, skip");
+			    							logger.debug(link.attr("abs:href") + ": disallow page, skip");
 			    						}
 //			    					}
 			    				}
@@ -371,7 +372,7 @@ public class Crawler implements CrawlMaster {
 		    	    	} catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
 		    				e.printStackTrace();
 						} catch (Exception e) {
-							logger.info(e.getMessage());
+							logger.warn(e.getMessage());
 						}
 	    			}
 	    			setWorking(false);
