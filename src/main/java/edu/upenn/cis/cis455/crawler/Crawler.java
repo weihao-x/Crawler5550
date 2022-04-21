@@ -146,11 +146,23 @@ public class Crawler implements CrawlMaster {
     		Thread crawlWorker = new Thread(()->{
     			String url = null;
     			HttpURLConnection con_head = null;
-    			HttpURLConnection con_get = null;
+//    			HttpURLConnection con_get = null;
     			Document doc = null;
     			Elements links = null;
     			URLInfo url_info = null;
     			String content_type = null;
+    			
+    			WebDriverManager.chromedriver().setup();
+		    	System.setProperty("webdriver.chrome.driver","./chromedriver");
+		    	System.setProperty("webdriver.chrome.whitelistedIps", "");
+		    	System.setProperty("webdriver.chrome.silentOutput", "true");
+		    	
+		    	ChromeOptions options = new ChromeOptions();
+		    	options.setHeadless(true);
+		    	ChromeDriver driver = new ChromeDriver(options);
+		    	
+		    	String sb = null;
+		    	String md5 = null;
     			
     			while (true) {
     				setWorking(true);
@@ -249,26 +261,26 @@ public class Crawler implements CrawlMaster {
 //			    					    sb.append((char)c);
 //			    					}
 			    					
-			    					WebDriverManager.chromedriver().setup();
-			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
-			    			    	System.setProperty("webdriver.chrome.whitelistedIps", "");
-			    			    	System.setProperty("webdriver.chrome.silentOutput", "true");
-			    			    	
-			    			    	ChromeOptions options = new ChromeOptions();
-			    			    	options.setHeadless(true);
-			    			    	ChromeDriver driver = new ChromeDriver(options);
+//			    					WebDriverManager.chromedriver().setup();
+//			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
+//			    			    	System.setProperty("webdriver.chrome.whitelistedIps", "");
+//			    			    	System.setProperty("webdriver.chrome.silentOutput", "true");
+//			    			    	
+//			    			    	ChromeOptions options = new ChromeOptions();
+//			    			    	options.setHeadless(true);
+//			    			    	ChromeDriver driver = new ChromeDriver(options);
 			    			    	
 			    			    	logger.info(url + ": downloading");
 			    			    	driver.get(url);
 			    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
+			    			        Thread.sleep(1000);
 			    			        
-			    			        WebElement html = driver.findElement(By.tagName("html"));
-			    			        String sb = html.getAttribute("outerHTML");
+			    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
 			    			    	
-			    			    	driver.quit();
+//			    			    	driver.quit();
 			    					
 			    					// MD5 hash
-			    					String md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
+			    					md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
 				    				if (StorageFactory.getDatabaseInstance(envPath).containsMd5(md5)) {
 				    					throw new Exception(url + ": document already processed, skip");
 				    				}
@@ -326,24 +338,24 @@ public class Crawler implements CrawlMaster {
 //			    					    sb.append((char)c);
 //			    					}
 			    					
-			    					WebDriverManager.chromedriver().setup();
-			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
-			    			    	
-			    			    	ChromeOptions options = new ChromeOptions();
-			    			    	options.setHeadless(true);
-			    			    	ChromeDriver driver = new ChromeDriver(options);
+//			    					WebDriverManager.chromedriver().setup();
+//			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
+//			    			    	
+//			    			    	ChromeOptions options = new ChromeOptions();
+//			    			    	options.setHeadless(true);
+//			    			    	ChromeDriver driver = new ChromeDriver(options);
 			    			    	
 			    			    	logger.info(url + ": downloading");
 			    			    	driver.get(url);
 			    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(2000));
+			    			        Thread.sleep(1000);
 			    			        
-			    			        WebElement html = driver.findElement(By.tagName("html"));
-			    			        String sb = html.getAttribute("outerHTML");
+			    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
 			    			    	
-			    			    	driver.quit();
+//			    			    	driver.quit();
 			    					
 			    					// MD5 hash
-			    					String md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
+			    					md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
 				    				if (StorageFactory.getDatabaseInstance(envPath).containsMd5(md5)) {
 				    					throw new Exception(url + ": document already processed, skip");
 				    				}
@@ -366,6 +378,7 @@ public class Crawler implements CrawlMaster {
 		    				//incCount();
 		    		        if (count.get() <= 0) {
 		    		        	System.out.println("Worker retrieve enough files, exit");
+		    		        	driver.quit();
 	    		        		notifyThreadExited();
 	    	    				break;
 		    		        }     
