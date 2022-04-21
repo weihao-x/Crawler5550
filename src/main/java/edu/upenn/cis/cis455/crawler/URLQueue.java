@@ -12,11 +12,11 @@ public class URLQueue {
 	static final Logger logger = LogManager.getLogger(URLQueue.class);	
 	
 	protected ArrayList<String> sharedQueue = new ArrayList<>();
-	int sizeOfQueue = 10000000;
+	int sizeOfQueue = 50000;
 	int crawlDelay = 0;
 	
 	public URLQueue(int crawlDelay) {
-		this.crawlDelay = (10*crawlDelay+60)*1000;
+		this.crawlDelay = (10*crawlDelay+10)*1000;
 	}
 	
 	public void add(String task) throws InterruptedException {
@@ -24,7 +24,7 @@ public class URLQueue {
 		//wait if the queue is full
 		long start = System.currentTimeMillis();
 		long end = start + crawlDelay;
-		while (System.currentTimeMillis() < end) {
+		while (System.currentTimeMillis() < end && sharedQueue.size() < 10000) {
 			synchronized (sharedQueue) {
 				if (sharedQueue.size() == sizeOfQueue) {
 					// Synchronizing on the sharedQueue to make sure no more than one
