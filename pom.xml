@@ -164,7 +164,7 @@
 	                  <argument>https://en.wikipedia.org/</argument>
 	                  <argument>./data_save/database_01</argument>
 	                  <argument>10</argument>
-	                  <argument>10000</argument>
+	                  <argument>100</argument>
 	                </arguments>
 				    <cleanupDaemonThreads>false</cleanupDaemonThreads>
 	              </configuration>

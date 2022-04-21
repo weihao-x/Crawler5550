@@ -326,7 +326,7 @@ public class Crawler implements CrawlMaster {
 //			    					}
 			    					
 			    					WebDriverManager.chromedriver().setup();
-			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver.exe");
+			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
 			    			    	
 			    			    	ChromeOptions options = new ChromeOptions();
 			    			    	options.setHeadless(true);
