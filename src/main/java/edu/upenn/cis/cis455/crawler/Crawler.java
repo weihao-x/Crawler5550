@@ -250,7 +250,7 @@ public class Crawler implements CrawlMaster {
 //			    					}
 			    					
 			    					WebDriverManager.chromedriver().setup();
-			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver.exe");
+			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
 			    			    	System.setProperty("webdriver.chrome.whitelistedIps", "");
 			    			    	
 			    			    	ChromeOptions options = new ChromeOptions();
