@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.politico.com/</argument>
-	                  <argument>./data_save/database_politico</argument>
+	                  <argument>https://www.npr.org/</argument>
+	                  <argument>./data_save/database_npr</argument>
 	                  <argument>10</argument>
 	                  <argument>10000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_politico</argument>
-	                  <argument>./output/output_politico</argument>
+	                  <argument>./data_save/database_npr</argument>
+	                  <argument>./output/output_npr</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>

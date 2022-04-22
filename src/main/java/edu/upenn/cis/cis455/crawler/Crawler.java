@@ -121,6 +121,7 @@ public class Crawler implements CrawlMaster {
 	    		
 	    		for (String disallow_url : disallow) {
 					if (startUrl.startsWith(disallow_url)) {
+						queue = new URLQueue(0);
 						return;
 					}
 				}
