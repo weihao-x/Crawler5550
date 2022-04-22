@@ -16,7 +16,7 @@ public class URLQueue {
 	int crawlDelay = 0;
 	
 	public URLQueue(int crawlDelay) {
-		this.crawlDelay = (10*crawlDelay+20)*1000;
+		this.crawlDelay = (10*crawlDelay+30)*1000;
 	}
 	
 	public void add(String task) throws InterruptedException {
