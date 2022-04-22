@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.usatoday.com/</argument>
-	                  <argument>./data_save/database_usatoday</argument>
+	                  <argument>https://www.wflx.com/</argument>
+	                  <argument>./data_save/database_wflx</argument>
 	                  <argument>10</argument>
 	                  <argument>10000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_usatoday</argument>
-	                  <argument>./output/output_usatoday</argument>
+	                  <argument>./data_save/database_wflx</argument>
+	                  <argument>./output/output_wflx</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
