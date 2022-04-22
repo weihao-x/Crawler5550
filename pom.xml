@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.seattlemedium.com/</argument>
-	                  <argument>./data_save/database_seattlemedium</argument>
+	                  <argument>https://www.denofgeek.com/</argument>
+	                  <argument>./data_save/database_denofgeek</argument>
 	                  <argument>10</argument>
 	                  <argument>10000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_seattlemedium</argument>
-	                  <argument>./output/output_seattlemedium</argument>
+	                  <argument>./data_save/database_denofgeek</argument>
+	                  <argument>./output/output_denofgeek</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
