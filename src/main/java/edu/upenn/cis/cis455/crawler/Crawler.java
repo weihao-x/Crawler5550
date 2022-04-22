@@ -163,9 +163,7 @@ public class Crawler implements CrawlMaster {
 		    	
 		    	String sb = null;
 		    	String md5 = null;
-		    	
-		    	int restart = 0;
-    			
+		    	    			
     			while (true) {
     				setWorking(true);
 	    			try {
@@ -293,12 +291,8 @@ public class Crawler implements CrawlMaster {
 				    						content_type);
 				    				
 				    				incCount();
-				    				restart += 1;
-				    				if (restart == 100) {
-				    					restart = 0;
-				    					driver.quit();
-				    					driver = new ChromeDriver(options);
-				    				}
+				    				driver.quit();
+				    				driver = new ChromeDriver(options);
 				    				
 				    				doc = Jsoup.parse(sb.toString(), url);
 			    				}
@@ -374,12 +368,8 @@ public class Crawler implements CrawlMaster {
 				    						content_type);
 				    				
 				    				incCount();
-				    				restart += 1;
-				    				if (restart == 100) {
-				    					restart = 0;
-				    					driver.quit();
-				    					driver = new ChromeDriver(options);
-				    				}
+				    				driver.quit();
+				    				driver = new ChromeDriver(options);
 				    				
 				    				// doc = Jsoup.parse(sb.toString(), url);
 			    				}
@@ -392,7 +382,6 @@ public class Crawler implements CrawlMaster {
 		    				//incCount();
 		    		        if (count.get() <= 0) {
 		    		        	System.out.println("Worker retrieve enough files, exit");
-		    		        	driver.quit();
 	    		        		notifyThreadExited();
 	    	    				break;
 		    		        }     
