@@ -387,8 +387,12 @@ public class Crawler implements CrawlMaster {
 		    		        }     
 		    	    	} catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
 		    				e.printStackTrace();
+		    				driver.quit();
+		    				driver = new ChromeDriver(options);
 						} catch (Exception e) {
 							logger.warn(e.getMessage());
+							driver.quit();
+		    				driver = new ChromeDriver(options);
 						}
 	    			}
 	    			setWorking(false);
