@@ -275,7 +275,6 @@ public class Crawler implements CrawlMaster {
 			    			    	logger.info(url + ": downloading");
 			    			    	driver.get(url);
 			    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
-			    			        Thread.sleep(1000);
 			    			        
 			    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
 			    			    	
@@ -352,7 +351,6 @@ public class Crawler implements CrawlMaster {
 			    			    	logger.info(url + ": downloading");
 			    			    	driver.get(url);
 			    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(2000));
-			    			        Thread.sleep(1000);
 			    			        
 			    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
 			    			    	
