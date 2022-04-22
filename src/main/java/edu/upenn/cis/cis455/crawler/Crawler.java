@@ -98,7 +98,7 @@ public class Crawler implements CrawlMaster {
 	    				disallow.clear();
 	    				crawlDelay = 0;
 	    				while ((line = br.readLine()) != null && !line.startsWith("User-agent")) {
-	    					if (line.startsWith("Disallow")) {
+	    					if (line.startsWith("Disallow") && !line.equals("Disallow:")) {
 	    						disallow.add(host + line.substring(line.indexOf(":")+1).trim());
 	    					}
 	    					else if (line.startsWith("Crawl-delay")) {
@@ -109,7 +109,7 @@ public class Crawler implements CrawlMaster {
 	    			}
 	    			else if (line.startsWith("User-agent") && line.contains("User-agent: *")) {
 	    				while ((line = br.readLine()) != null && !line.startsWith("User-agent")) {
-	    					if (line.startsWith("Disallow")) {
+	    					if (line.startsWith("Disallow") && !line.equals("Disallow:")) {
 	    						disallow.add(host + line.substring(line.indexOf(":")+1).trim());
 	    					}
 	    					else if (line.startsWith("Crawl-delay")) {
