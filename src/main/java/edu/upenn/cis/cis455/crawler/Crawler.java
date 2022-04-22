@@ -156,6 +156,7 @@ public class Crawler implements CrawlMaster {
 		    	System.setProperty("webdriver.chrome.driver","./chromedriver");
 		    	System.setProperty("webdriver.chrome.whitelistedIps", "");
 		    	System.setProperty("webdriver.chrome.silentOutput", "true");
+		    	System.setProperty("webdriver.chrome.silentLogging", "true");
 		    	
 		    	ChromeOptions options = new ChromeOptions();
 		    	options.setHeadless(true);
