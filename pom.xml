@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_thedirect</argument>
-	                  <argument>./output/output_thedirect</argument>
+	                  <argument>./data_save/database_usatoday</argument>
+	                  <argument>./output/output_usatoday</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
