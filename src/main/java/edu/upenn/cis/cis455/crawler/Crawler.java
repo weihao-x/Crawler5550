@@ -294,7 +294,7 @@ public class Crawler implements CrawlMaster {
 				    						content_type);
 				    				
 				    				incCount();
-				    				logger.info("Finish " + count + " documents");
+				    				logger.info("Finish " + (100000 - count.get()) + " documents");
 				    				
 				    				doc = Jsoup.parse(sb.toString(), url);
 			    				}
