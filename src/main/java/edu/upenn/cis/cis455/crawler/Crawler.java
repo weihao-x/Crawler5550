@@ -128,7 +128,6 @@ public class Crawler implements CrawlMaster {
     		}
     		
     		host = host.substring(host.indexOf(".")+1);
-    		System.out.println(host);
 
     		queue = new URLQueue(crawlDelay);
 			queue.add(startUrl);
