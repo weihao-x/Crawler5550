@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_wikipedia</argument>
-	                  <argument>./output/output_wikipedia</argument>
+	                  <argument>./data_save/database_denofgeek</argument>
+	                  <argument>./output/output_denofgeek</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
