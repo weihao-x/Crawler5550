@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_cnn</argument>
-	                  <argument>./output/output_cnn</argument>
+	                  <argument>./data_save/database_foxnews</argument>
+	                  <argument>./output/output_foxnews</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
