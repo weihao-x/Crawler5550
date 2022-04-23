@@ -306,7 +306,7 @@ public class Crawler implements CrawlMaster {
 //			    					}
 //			    					else {
 			    						// Disallow page
-			    						if (isAllow(link.attr("abs:href"))) {
+			    						if (isAllow(link.attr("abs:href")) && !StorageFactory.getDatabaseInstance(envPath).containsUrl(link.attr("abs:href"))) {
 			    							queue.add(link.attr("abs:href"));
 			    						}
 			    						else {
