@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 
 import com.sleepycat.je.DatabaseException;
@@ -43,11 +46,12 @@ public class Exporter {
 		for (String url : db.allUrls()) {
 			FileWriter myWriter;
 			try {
-				myWriter = new FileWriter(outputPath + "/" + UUID.randomUUID().toString());
+				myWriter = new FileWriter(outputPath + "/" + 
+						Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-256").digest(db.getDocument(url).getBytes())));
 				myWriter.write(url + "\n");
 				myWriter.write(db.getDocument(url));
 			    myWriter.close();
-			} catch (IOException e) {
+			} catch (IOException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}		    
 		}

@@ -30,7 +30,7 @@ public interface StorageInterface {
      * Retrieves a document's Content-Type by URL
      */
     public String getContentType(String url);
-    
+        
     /**
      * Check if the url has been visited
      */
