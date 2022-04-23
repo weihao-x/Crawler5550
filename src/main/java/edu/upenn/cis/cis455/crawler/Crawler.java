@@ -50,7 +50,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Crawler implements CrawlMaster {
 	static final Logger logger = LogManager.getLogger(Crawler.class);
 	
-    static final int NUM_WORKERS = 4;
+    static final int NUM_WORKERS = 8;
     
     protected List<Thread> crawlWorkers;
     private AtomicInteger exited;
@@ -294,6 +294,7 @@ public class Crawler implements CrawlMaster {
 				    						content_type);
 				    				
 				    				incCount();
+				    				logger.info("Finish " + count + " documents");
 				    				
 				    				doc = Jsoup.parse(sb.toString(), url);
 			    				}
