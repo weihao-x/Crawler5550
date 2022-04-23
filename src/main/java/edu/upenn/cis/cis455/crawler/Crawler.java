@@ -161,7 +161,7 @@ public class Crawler implements CrawlMaster {
 		    	
 		    	ChromeOptions options = new ChromeOptions();
 		    	options.setHeadless(true);
-		    	ChromeDriver driver = new ChromeDriver(options);
+		    	ChromeDriver driver = null;
 		    	
 		    	String sb = null;
 		    	String md5 = null;
@@ -185,6 +185,8 @@ public class Crawler implements CrawlMaster {
 	    			else {
 	    				url_info = new URLInfo(url);
 		    	    	try {
+		    	    		driver = new ChromeDriver(options);
+		    	    		
 		    	    		if (url_info.isSecure()) {
 		    	    			con_head = (HttpsURLConnection) (new URL(url)).openConnection();
 		    	    		}
@@ -292,8 +294,6 @@ public class Crawler implements CrawlMaster {
 				    						content_type);
 				    				
 				    				incCount();
-				    				driver.quit();
-				    				driver = new ChromeDriver(options);
 				    				
 				    				doc = Jsoup.parse(sb.toString(), url);
 			    				}
@@ -368,8 +368,6 @@ public class Crawler implements CrawlMaster {
 				    						content_type);
 				    				
 				    				incCount();
-				    				driver.quit();
-				    				driver = new ChromeDriver(options);
 				    				
 				    				// doc = Jsoup.parse(sb.toString(), url);
 			    				}
@@ -384,15 +382,16 @@ public class Crawler implements CrawlMaster {
 		    		        	System.out.println("Worker retrieve enough files, exit");
 	    		        		notifyThreadExited();
 	    	    				break;
-		    		        }     
+		    		        }
+		    		        
+		    		        driver.quit();
+		    		        
 		    	    	} catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
 		    				e.printStackTrace();
 		    				driver.quit();
-		    				driver = new ChromeDriver(options);
 						} catch (Exception e) {
 							logger.warn(e.getMessage());
 							driver.quit();
-		    				driver = new ChromeDriver(options);
 						}
 	    			}
 	    			setWorking(false);
