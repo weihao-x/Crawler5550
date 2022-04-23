@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://en.wikipedia.org/</argument>
-	                  <argument>./data_save/database_wikipedia</argument>
+	                  <argument>https://www.economist.com/</argument>
+	                  <argument>./data_save/database_economist</argument>
 	                  <argument>10</argument>
 	                  <argument>100000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_wikipedia</argument>
-	                  <argument>./output/output_wikipedia</argument>
+	                  <argument>./data_save/database_economist</argument>
+	                  <argument>./output/output_economist</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
