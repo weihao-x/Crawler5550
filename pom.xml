@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_nytimes</argument>
-	                  <argument>./output/output_nytimes</argument>
+	                  <argument>./data_save/database_seattlemedium</argument>
+	                  <argument>./output/output_seattlemedium</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
