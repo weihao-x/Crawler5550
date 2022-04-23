@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_washingtonpost</argument>
-	                  <argument>./output/output_washingtonpost</argument>
+	                  <argument>./data_save/database_cnn</argument>
+	                  <argument>./output/output_cnn</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
