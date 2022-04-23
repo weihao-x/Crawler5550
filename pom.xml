@@ -161,10 +161,10 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.forbes.com/</argument>
-	                  <argument>./data_save/database_forbes</argument>
+	                  <argument>https://www.espn.com/</argument>
+	                  <argument>./data_save/database_espn</argument>
 	                  <argument>10</argument>
-	                  <argument>10000</argument>
+	                  <argument>100000</argument>
 	                </arguments>
 				    <cleanupDaemonThreads>false</cleanupDaemonThreads>
 	              </configuration>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_forbes</argument>
-	                  <argument>./output/output_forbes</argument>
+	                  <argument>./data_save/database_espn</argument>
+	                  <argument>./output/output_espn</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
