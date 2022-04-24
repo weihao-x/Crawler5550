@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.cnbc.com/</argument>
-	                  <argument>./data_save/database_cnbc</argument>
+	                  <argument>https://www.theguardian.com/</argument>
+	                  <argument>./data_save/database_theguardian</argument>
 	                  <argument>10</argument>
 	                  <argument>100000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_cnbc</argument>
-	                  <argument>./output/output_cnbc</argument>
+	                  <argument>./data_save/database_theguardian</argument>
+	                  <argument>./output/output_theguardian</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
