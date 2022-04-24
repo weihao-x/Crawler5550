@@ -12,7 +12,7 @@ public class URLQueue {
 	static final Logger logger = LogManager.getLogger(URLQueue.class);	
 	
 	protected ArrayList<String> sharedQueue = new ArrayList<>();
-	int sizeOfQueue = 500000;
+	int sizeOfQueue = 50000;
 	int crawlDelay = 0;
 	
 	public URLQueue(int crawlDelay) {

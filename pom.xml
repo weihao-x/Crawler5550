@@ -161,10 +161,10 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.apple.com/</argument>
-	                  <argument>./data_save/database_apple</argument>
+	                  <argument>https://www.9to5mac.com/</argument>
+	                  <argument>./data_save/database_9to5mac</argument>
 	                  <argument>10</argument>
-	                  <argument>100000</argument>
+	                  <argument>50000</argument>
 	                </arguments>
 				    <cleanupDaemonThreads>false</cleanupDaemonThreads>
 	              </configuration>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_apple</argument>
-	                  <argument>./output/output_apple</argument>
+	                  <argument>./data_save/database_9to5mac</argument>
+	                  <argument>./output/output_9to5mac</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
