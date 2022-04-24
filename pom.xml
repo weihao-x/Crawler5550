@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.wikitravel.org/</argument>
-	                  <argument>./data_save/database_wikitravel</argument>
+	                  <argument>https://www.techradar.com/</argument>
+	                  <argument>./data_save/database_techradar</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_wikitravel</argument>
-	                  <argument>./output/output_wikitravel</argument>
+	                  <argument>./data_save/database_techradar</argument>
+	                  <argument>./output/output_techradar</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
