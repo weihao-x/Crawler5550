@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.9to5mac.com/</argument>
-	                  <argument>./data_save/database_9to5mac</argument>
+	                  <argument>https://www.history.com/</argument>
+	                  <argument>./data_save/database_history</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_9to5mac</argument>
-	                  <argument>./output/output_9to5mac</argument>
+	                  <argument>./data_save/database_history</argument>
+	                  <argument>./output/output_history</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
