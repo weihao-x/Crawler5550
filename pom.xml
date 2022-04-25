@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.columbia.edu/</argument>
-	                  <argument>./data_save/database_columbia</argument>
+	                  <argument>https://www.scientificamerican.com/</argument>
+	                  <argument>./data_save/database_scientificamerican</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_columbia</argument>
-	                  <argument>./output/output_columbia</argument>
+	                  <argument>./data_save/database_scientificamerican</argument>
+	                  <argument>./output/output_scientificamerican</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
