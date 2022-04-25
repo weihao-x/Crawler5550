@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.imdb.com/</argument>
-	                  <argument>./data_save/database_imdb</argument>
+	                  <argument>https://www.upenn.edu/</argument>
+	                  <argument>./data_save/database_upenn</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_imdb</argument>
-	                  <argument>./output/output_imdb</argument>
+	                  <argument>./data_save/database_upenn</argument>
+	                  <argument>./output/output_upenn</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
