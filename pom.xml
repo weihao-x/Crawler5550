@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.theverge.com/</argument>
-	                  <argument>./data_save/database_theverge</argument>
+	                  <argument>https://www.healthline.com/</argument>
+	                  <argument>./data_save/database_healthline</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_theverge</argument>
-	                  <argument>./output/output_theverge</argument>
+	                  <argument>./data_save/database_healthline</argument>
+	                  <argument>./output/output_healthline</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
