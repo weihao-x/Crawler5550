@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.allrecipes.com/</argument>
-	                  <argument>./data_save/database_allrecipes</argument>
+	                  <argument>https://www.foodnetwork.com/</argument>
+	                  <argument>./data_save/database_foodnetwork</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_allrecipes</argument>
-	                  <argument>./output/output_allrecipes</argument>
+	                  <argument>./data_save/database_foodnetwork</argument>
+	                  <argument>./output/output_foodnetwork</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
