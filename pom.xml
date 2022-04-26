@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.nationsonline.org/</argument>
-	                  <argument>./data_save/database_nationsonline</argument>
+	                  <argument>https://www.dailymail.co.uk/</argument>
+	                  <argument>./data_save/database_dailymail</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_nationsonline</argument>
-	                  <argument>./output/output_nationsonline</argument>
+	                  <argument>./data_save/database_dailymail</argument>
+	                  <argument>./output/output_dailymail</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
