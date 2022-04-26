@@ -161,8 +161,8 @@
 	              <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Crawler</mainClass>
 	                <arguments>
-	                  <argument>https://www.foodnetwork.com/</argument>
-	                  <argument>./data_save/database_foodnetwork</argument>
+	                  <argument>https://www.phila.gov/</argument>
+	                  <argument>./data_save/database_phila</argument>
 	                  <argument>10</argument>
 	                  <argument>50000</argument>
 	                </arguments>
@@ -179,8 +179,8 @@
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Exporter</mainClass>
 	                <arguments>
-	                  <argument>./data_save/database_foodnetwork</argument>
-	                  <argument>./output/output_foodnetwork</argument>
+	                  <argument>./data_save/database_phila</argument>
+	                  <argument>./output/output_phila</argument>
 	                </arguments>
 	              </configuration>
 			    </execution>
