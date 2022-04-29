@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -496,26 +497,43 @@ public class Crawler implements CrawlMaster {
         Integer size = Integer.valueOf(args[2]);
         Integer count = args.length == 4 ? Integer.valueOf(args[3]) : 100;
         
-        StorageInterface db = null;
+        URL aURL = null;
 		try {
-			db = StorageFactory.getDatabaseInstance(envPath);
-		} catch (DatabaseException | IllegalArgumentException | FileNotFoundException e) {
+			aURL = new URL(startUrl);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-        Crawler crawler = new Crawler(startUrl, null, size, count, envPath);
-
-        System.out.println("Starting crawl of " + count + " documents, starting at " + startUrl);
-        crawler.start();
-
-        while (!crawler.isDone())
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        db.close();
+		System.out.println("protocol = " + aURL.getProtocol());
+		System.out.println("authority = " + aURL.getAuthority());
+		System.out.println("host = " + aURL.getHost());
+		System.out.println("port = " + aURL.getPort());
+		System.out.println("path = " + aURL.getPath());
+		System.out.println("query = " + aURL.getQuery());
+		System.out.println("filename = " + aURL.getFile());
+		System.out.println("ref = " + aURL.getRef());
+        
+//        StorageInterface db = null;
+//		try {
+//			db = StorageFactory.getDatabaseInstance(envPath);
+//		} catch (DatabaseException | IllegalArgumentException | FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//
+//        Crawler crawler = new Crawler(startUrl, null, size, count, envPath);
+//
+//        System.out.println("Starting crawl of " + count + " documents, starting at " + startUrl);
+//        crawler.start();
+//
+//        while (!crawler.isDone())
+//            try {
+//                Thread.sleep(10);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//        db.close();
         System.out.println("Done crawling!");
         
         return;
