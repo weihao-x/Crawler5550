@@ -25,7 +25,8 @@ public class WebInterface {
 //		} catch (DatabaseException | IllegalArgumentException | FileNotFoundException e) {e.printStackTrace();}
 //
 //        LoginFilter testIfLoggedIn = new LoginFilter(database);
-    	staticFileLocation("/.well-known");
+    	staticFileLocation(".well-known/pki-validation");
+    	staticFiles.externalLocation(".well-known/pki-validation");
         port(80);
         
         
