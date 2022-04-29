@@ -26,7 +26,7 @@ public class WebInterface {
 //
 //        LoginFilter testIfLoggedIn = new LoginFilter(database);
 
-        port(45555);
+        port(80);
         
 //        if (args.length == 2) {
 //            staticFiles.externalLocation(args[1]);
