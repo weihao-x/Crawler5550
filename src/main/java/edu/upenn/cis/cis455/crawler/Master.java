@@ -186,6 +186,7 @@ public class Master {
         
         get("/stop", (req, res) -> {
         	status = "STOP";
+        	queue.add(null);
         	res.redirect("/");
         	return "";
         });
