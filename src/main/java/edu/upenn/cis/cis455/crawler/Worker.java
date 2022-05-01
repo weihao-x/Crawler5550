@@ -14,6 +14,8 @@ public class Worker {
 	static String status = null;
 	static Crawler crawler = null;
 	static String master = null;
+	static String worker = null;
+	static int count = 0;
 	
 	public static void main(String args[]) {
 		org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
@@ -25,11 +27,8 @@ public class Worker {
 	    		crawler.setStatus("RUNNING");
 	    		crawler.start();
 	    	}
-	    	return crawler.getStatus();
-	    });
-	    
-	    get("/status", (req, res) -> {
-	    	return crawler.getStatus();
+	    	res.redirect("/");
+        	return "";
 	    });
 	    
 	    get("/stop", (req, res) -> {
@@ -61,20 +60,45 @@ public class Worker {
 	    	
 	    	crawler.setStatus("IDLE");
 	    	
-	    	return crawler.getStatus();
+	    	res.redirect("/");
+        	return "";
 	    });
 	    
 	    post("/add", (req, res) -> {
 	    	crawler.addUrl(req.queryParams("url"));
+	    	count += 1;
         	return "";
 	    });
 	    
 	    post("/register", (req, res) -> {
 	    	master = req.queryParams("master");
+	    	worker = req.queryParams("worker");
 	    	crawler.master = master;
 	    	logger.info("Set master: " + crawler.master);
         	return "";
 	    });
+	    
+	    get("/", (req, res) -> {
+        	String r = "<!DOCTYPE html>\r\n"
+        			+ "<html>\r\n"
+        			+ "<head>\r\n"
+        			+ "    <title>Crawler Worker Status</title>\r\n"
+        			+ "</head>\r\n"
+        			+ "<body>\r\n"
+        			+ "<h1>Crawler Worker Status</h1>\r\n"
+        			+ "<h2>" + worker + "</h2>\r\n"
+        			+ "Worker is " + status + "<br/>\r\n"
+        			+ "Url received: " + String.valueOf(count) + "<br/>\r\n"
+        			+ "Url processed: " + String.valueOf(crawler.getCount()) + "\r\n"
+        			+ "<form action=\"/start\"><input type=\"submit\" value=\"Start\" /></form>\r\n"
+        			+ "<form action=\"/stop\"><input type=\"submit\" value=\"Stop\" /></form>\r\n";
+        	
+        	r += "\r\n"
+        			+ "</body>\r\n"
+        			+ "</html>";
+        	
+        	return r;
+        });
 	    
 	    crawler = new Crawler(args[0]);
 	    

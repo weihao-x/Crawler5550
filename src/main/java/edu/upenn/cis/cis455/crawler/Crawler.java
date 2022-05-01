@@ -302,6 +302,10 @@ public class Crawler {
     public void incCount() {
     	count.incrementAndGet();
     }
+    
+    public int getCount() {
+    	return count.get();
+    }
 
     /**
      * Workers should notify when they are processing an URL

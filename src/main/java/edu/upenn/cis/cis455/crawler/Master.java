@@ -91,7 +91,7 @@ public class Master {
         			+ "</head>\r\n"
         			+ "<body>\r\n"
         			+ "<h1>Crawler Master Dashboard</h1>\r\n"
-        			+ "<h2>Status</h3>\r\n"
+        			+ "<h2>Status</h2>\r\n"
         			+ "Master is " + status + "<br/>\r\n"
         			+ "Url sent: " + String.valueOf(count) + "<br/>\r\n"
         			+ "Url in queue: " + String.valueOf(queue.sharedQueue.size()) + "\r\n"
@@ -100,22 +100,19 @@ public class Master {
         			+ "<form action=\"/clear\"><input type=\"submit\" value=\"Clear queue\" /></form>\r\n"
         			+ "<form action=\"/start\"><input type=\"submit\" value=\"Start\" /></form>\r\n"
         			+ "<form action=\"/stop\"><input type=\"submit\" value=\"Stop\" /></form>\r\n"
-        			+ "<h2>Queue</h3>\r\n"
+        			+ "<h2>Queue</h2>\r\n"
         			+ "<form method=\"POST\" action=\"/add\">\r\n"
         			+ "Url: <input type=\"text\" name=\"url\"/>\r\n"
         			+ "<input type=\"submit\" value=\"Add to queue\"/>\r\n"
         			+ "</form>\r\n"
-        			+ "<h2>Workers</h3>\r\n"
+        			+ "<h2>Workers</h2>\r\n"
         			+ "<form method=\"POST\" action=\"/register\">\r\n"
         			+ "Host: <input type=\"text\" name=\"host\"/>\r\n"
         			+ "<input type=\"submit\" value=\"Register\"/>\r\n"
         			+ "</form>"
         			+ "\r\n";
         	for (String worker : workers) {
-        		r += worker + "\r\n"
-        				+ "<a href=\"http://" + worker + "/start\">start<a>\r\n"
-        				+ "<a href=\"http://" + worker + "/status\">status<a>\r\n"
-        				+ "<a href=\"http://" + worker + "/stop\">stop<a>\r\n"
+        		r += "<a href=\"http://" + worker + "/\">" + worker + "<a>\r\n"
         				+ "<a href=\"http://localhost:45555/remove?host=" + worker +"\">remove<a>\r\n"
         				+ "<br/>";
         	}
@@ -140,7 +137,7 @@ public class Master {
         
         post("/register", (req, res) -> {
         	workers.add(req.queryParams("host"));
-        	HttpURLConnection con = (HttpURLConnection) (new URL("http://" + req.queryParams("host") + "/register?master=" + args[1])).openConnection();
+        	HttpURLConnection con = (HttpURLConnection) (new URL("http://" + req.queryParams("host") + "/register?master=" + args[1] + "&worker=" + req.queryParams("host"))).openConnection();
 			con.setRequestMethod("POST");
 			con.setRequestProperty("Content-Type", "application/json");
 			con.getResponseCode();
