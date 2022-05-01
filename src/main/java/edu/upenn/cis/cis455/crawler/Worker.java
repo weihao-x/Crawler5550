@@ -3,10 +3,14 @@ package edu.upenn.cis.cis455.crawler;
 import static spark.Spark.*;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.storage.StorageFactory;
 
 public class Worker {
+	static final Logger logger = LogManager.getLogger(Worker.class);
+	
 	static String status = null;
 	static Crawler crawler = null;
 	static String master = null;
@@ -62,6 +66,7 @@ public class Worker {
 	    post("/register", (req, res) -> {
 	    	master = req.queryParams("master");
 	    	crawler.master = master;
+	    	logger.info("Set master: " + crawler.master);
         	return "";
 	    });
 	    

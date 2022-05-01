@@ -76,8 +76,8 @@ public class Master {
     public static void main(String args[]) {
     	org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.ALL);
     	
-		if (args.length == 0 || args.length > 1) {
-		    System.out.println("Syntax: Master {database_location}");
+		if (args.length < 1 || args.length > 2) {
+		    System.out.println("Syntax: Master {database_location} {master_host}");
 		    System.exit(1);
 		}
 	    	
@@ -140,6 +140,10 @@ public class Master {
         
         post("/register", (req, res) -> {
         	workers.add(req.queryParams("host"));
+        	HttpURLConnection con = (HttpURLConnection) (new URL("http://" + req.queryParams("host") + "/register?master=" + args[1])).openConnection();
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
+			con.getResponseCode();
         	res.redirect("/");
         	return "";
         });
