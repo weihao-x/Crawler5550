@@ -64,7 +64,7 @@ public class Master {
 	}
 	
     public static void main(String args[]) {
-    	org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
+    	org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.ALL);
     	
 		if (args.length == 0 || args.length > 1) {
 		    System.out.println("Syntax: Master {database_location}");
