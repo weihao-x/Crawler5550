@@ -93,7 +93,7 @@ public class Crawler {
     			String content_type = null;
     			
     			WebDriverManager.chromedriver().setup();
-		    	System.setProperty("webdriver.chrome.driver","./chromedriver.exe");
+		    	System.setProperty("webdriver.chrome.driver","./chromedriver");
 		    	System.setProperty("webdriver.chrome.whitelistedIps", "");
 		    	System.setProperty("webdriver.chrome.silentOutput", "true");
 		    	System.setProperty("webdriver.chrome.silentLogging", "true");
