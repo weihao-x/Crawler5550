@@ -55,8 +55,8 @@ public class Master {
 					logger.info(url + " send to worker " + workers.get(hash % workers.size()) + " via " + "http://" + workers.get(hash % workers.size()) + "/add?url=" + url);
 					con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
 					con.setRequestMethod("POST");
-					con.connect();
-					//con.getResponseCode();
+					con.setRequestProperty("Content-Type", "application/json");
+					con.getResponseCode();
 					logger.info(con.getResponseCode());
 				} catch (InterruptedException | IOException e) {
 					e.printStackTrace();
