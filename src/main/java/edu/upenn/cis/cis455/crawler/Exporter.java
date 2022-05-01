@@ -1,6 +1,5 @@
 package edu.upenn.cis.cis455.crawler;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,8 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.UUID;
 import org.apache.commons.codec.binary.Hex;
 
 import com.sleepycat.je.DatabaseException;
@@ -31,7 +28,7 @@ public class Exporter {
         StorageInterface db = null;
 		try {
 			db = StorageFactory.getDatabaseInstance(envPath);
-		} catch (DatabaseException | IllegalArgumentException | FileNotFoundException e) {
+		} catch (DatabaseException | IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		

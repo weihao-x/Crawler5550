@@ -5,7 +5,6 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Database;
@@ -18,14 +17,14 @@ public class SampleDatabase {
 	private StoredClassCatalog javaCatalog;
     private static final String DOCUMENT_STORE = "document_store";
     private Database documentDb;
-    private static final String USER_STORE = "user_store";
-    private Database userDb;
     private static final String URL_STORE = "url_store";
     private Database urlDb;
     private static final String MD5_STORE = "md5_store";
     private Database md5Db;
+    private static final String QUEUE_STORE = "queue_store";
+    private Database queueDb;
 
-    public SampleDatabase(String homeDirectory) throws DatabaseException, FileNotFoundException {
+    public SampleDatabase(String homeDirectory) {
     	System.out.println("Opening environment in: " + homeDirectory);
 
     	EnvironmentConfig envConfig = new EnvironmentConfig();
@@ -41,15 +40,15 @@ public class SampleDatabase {
         javaCatalog = new StoredClassCatalog(catalogDb);
         
         documentDb = env.openDatabase(null, DOCUMENT_STORE, dbConfig);
-        userDb = env.openDatabase(null, USER_STORE, dbConfig);
         urlDb = env.openDatabase(null, URL_STORE, dbConfig);
         md5Db = env.openDatabase(null, MD5_STORE, dbConfig);
+        queueDb = env.openDatabase(null, QUEUE_STORE, dbConfig);
     }
 
     public void close() throws DatabaseException {
+    	queueDb.close();
     	md5Db.close();
     	urlDb.close();
-    	userDb.close();
     	documentDb.close();
     	javaCatalog.close();
     	env.truncateDatabase(null, MD5_STORE, false);
@@ -68,15 +67,15 @@ public class SampleDatabase {
         return documentDb;
     }
     
-    public final Database getUserDatabase() {
-        return userDb;
-    }
-    
     public final Database getUrlDatabase() {
         return urlDb;
     }
     
     public final Database getMd5Database() {
         return md5Db;
+    }
+    
+    public final Database getQueueDatabase() {
+        return queueDb;
     }
 }

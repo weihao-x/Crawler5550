@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crawler Master Dashboard</title>
+</head>
+<body>
+<h1>Crawler Master Dashboard</h1>
+
+<h2>Queue</h3>
+<form method="POST" action="/add">
+Url: <input type="text" name="url"/>
+<input type="submit" value="Add to queue"/>
+</form>
+<a href="http://localhost:80/status">status<a>
+
+<h2>Workers</h3>
+
+<form method="POST" action="/register">
+Host: <input type="text" name="host"/>
+<input type="submit" value="Register"/>
+</form>
+
+localhost1:45555
+<a href="http://localhost:45555/start">start<a>
+<a href="http://localhost:45555/status">status<a>
+<a href="http://localhost:45555/stop">stop<a>
+<a href="http://localhost:45555/stop">remove<a>
+<br/>
+localhost2:45555
+<a href="http://localhost:45555/start">start<a>
+<a href="http://localhost:45555/status">status<a>
+<a href="http://localhost:45555/stop">stop<a>
+
+</body>
+</html>

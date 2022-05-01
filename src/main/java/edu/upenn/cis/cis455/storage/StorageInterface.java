@@ -2,6 +2,8 @@ package edu.upenn.cis.cis455.storage;
 
 import java.util.List;
 
+import edu.upenn.cis.cis455.crawler.URLQueue;
+
 public interface StorageInterface {
 
     /**
@@ -41,20 +43,9 @@ public interface StorageInterface {
      */
     public boolean containsMd5(String md5);
 
-    /**
-     * Adds a user
-     */
-    public void addUser(String username, String password);
-
-    /**
-     * Tries to log in the user, or else throws a HaltException
-     */
-    public boolean getSessionForUser(String username, String password);
+    public void backupUrl(String url);
     
-    /**
-     * Check if the username has been registered
-     */
-    public boolean containsUsername(String username);
+    public void retrieveUrl(URLQueue queue) throws InterruptedException;
 
     /**
      * Shuts down / flushes / closes the storage system

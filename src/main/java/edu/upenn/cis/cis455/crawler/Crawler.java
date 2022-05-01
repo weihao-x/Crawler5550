@@ -15,7 +15,11 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -48,91 +52,27 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverLogLevel;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class Crawler implements CrawlMaster {
+public class Crawler {
 	static final Logger logger = LogManager.getLogger(Crawler.class);
 	
     static final int NUM_WORKERS = 8;
-    
-    protected List<Thread> crawlWorkers;
-    private AtomicInteger exited;
-    
-    private URLQueue queue;
-    
-    AtomicInteger count;
-    int size;
-    
-    List<String> disallow = null;
-    int crawlDelay = 0;
-    
-    String host = null;
-    
-    AtomicInteger sHelper;
-    
+    String status = null;
+    protected static List<Thread> crawlWorkers = null;
+    AtomicInteger count = null;
     String envPath = null;
+    Map<String, List<String>> robots = null;
+    protected static URLQueue queue = null;
 
-    public Crawler(String startUrl, StorageInterface db, int size, int count, String envPath) {
-    	exited = new AtomicInteger(Crawler.NUM_WORKERS);
+    public Crawler(String envPath) {
+    	status = "IDLE";
     	crawlWorkers = new ArrayList<>();
-    	
-    	this.count = new AtomicInteger(count);
-    	this.size = size;
-    	sHelper = new AtomicInteger(0);
-    	
+    	count = new AtomicInteger(0);
     	this.envPath = envPath;
-    	
-    	disallow = new ArrayList<>();
-    	
+    	robots = Collections.synchronizedMap(new HashMap<String, List<String>>());
+    	queue = new URLQueue();
     	try {
-    		// robots.txt
-    		URLInfo url_info = new URLInfo(startUrl);
-    		host = (url_info.isSecure() ? "https://" : "http://") + url_info.getHostName();
-    		HttpURLConnection con = null;
-    		if (url_info.isSecure())
-    			con = (HttpsURLConnection) (new URL(host + "/robots.txt")).openConnection();
-    		else
-    			con = (HttpURLConnection) (new URL(host + "/robots.txt")).openConnection();
-    		if (con.getResponseCode() == 200) {
-	    		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-	    		String line = null;
-	    		while ((line = br.readLine()) != null) {
-	    			if (line.startsWith("User-agent") && line.contains("cis455crawler")) {
-	    				disallow.clear();
-	    				crawlDelay = 0;
-	    				while ((line = br.readLine()) != null && !line.startsWith("User-agent")) {
-	    					if (line.startsWith("Disallow") && !line.equals("Disallow:")) {
-	    						disallow.add(host + line.substring(line.indexOf(":")+1).trim());
-	    					}
-	    					else if (line.startsWith("Crawl-delay")) {
-	    						crawlDelay = Integer.parseInt(line.split(":")[1].trim());
-	    					}
-	    				}
-	    				break;
-	    			}
-	    			else if (line.startsWith("User-agent") && line.contains("User-agent: *")) {
-	    				while ((line = br.readLine()) != null && !line.startsWith("User-agent")) {
-	    					if (line.startsWith("Disallow") && !line.equals("Disallow:")) {
-	    						disallow.add(host + line.substring(line.indexOf(":")+1).trim());
-	    					}
-	    					else if (line.startsWith("Crawl-delay")) {
-	    						crawlDelay = Integer.parseInt(line.split(":")[1].trim());
-	    					}
-	    				}
-	    			}
-	    		}
-	    		
-	    		for (String disallow_url : disallow) {
-					if (startUrl.startsWith(disallow_url)) {
-						queue = new URLQueue(0);
-						return;
-					}
-				}
-    		}
-    		
-    		host = host.substring(host.indexOf(".")+1);
-
-    		queue = new URLQueue(crawlDelay);
-			queue.add(startUrl);
-		} catch (InterruptedException | IOException e) {
+			StorageFactory.getDatabaseInstance(envPath).retrieveUrl(queue);
+		} catch (DatabaseException | IllegalArgumentException | InterruptedException e) {
 			e.printStackTrace();
 		}
     }
@@ -140,21 +80,20 @@ public class Crawler implements CrawlMaster {
     /**
      * Main thread
      */
-    public void start() {
+    public void start() {    	
     	crawlWorkers.clear();
     	
     	for (int i = 0; i < Crawler.NUM_WORKERS; i++) {
     		Thread crawlWorker = new Thread(()->{
     			String url = null;
     			HttpURLConnection con_head = null;
-//    			HttpURLConnection con_get = null;
+    			HttpURLConnection con_robots = null;
     			Document doc = null;
     			Elements links = null;
-    			URLInfo url_info = null;
     			String content_type = null;
     			
     			WebDriverManager.chromedriver().setup();
-		    	System.setProperty("webdriver.chrome.driver","./chromedriver");
+		    	System.setProperty("webdriver.chrome.driver","./chromedriver.exe");
 		    	System.setProperty("webdriver.chrome.whitelistedIps", "");
 		    	System.setProperty("webdriver.chrome.silentOutput", "true");
 		    	System.setProperty("webdriver.chrome.silentLogging", "true");
@@ -165,236 +104,171 @@ public class Crawler implements CrawlMaster {
 		    	
 		    	String sb = null;
 		    	String md5 = null;
+		    	
+		    	URL aURL = null;
+		    	String line = null;
 		    	    			
     			while (true) {
+    				if (status.equals("STOP")) {
+    					break;
+    				}
     				setWorking(true);
 	    			try {
 						url = queue.remove(0);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-						System.out.println("Worker get interrupted, exit");
-	    				notifyThreadExited();
-						break;
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
 					}
 	    			
 	    			if (url == null) {
-	    				System.out.println("Worker wait too long for remove, exit");
-	    				notifyThreadExited();
+	    				setWorking(false);
 	    				break;
 	    			}
-	    			else {
-	    				url_info = new URLInfo(url);
-		    	    	try {
-		    	    		driver = new ChromeDriver(options);
-		    	    		
-		    	    		if (url_info.isSecure()) {
-		    	    			con_head = (HttpsURLConnection) (new URL(url)).openConnection();
-		    	    		}
-		    	    		else {
-		    	    			con_head = (HttpURLConnection) (new URL(url)).openConnection();
-		    	    		}
-		    	    		con_head.setRequestMethod("HEAD");
-		    	    		con_head.setRequestProperty("User-Agent", "cis455crawler");  	    			    				
-		    				
-		    				// If url has been visited
-		    				if (StorageFactory.getDatabaseInstance(envPath).containsUrl(url)) {
-		    					logger.debug(url + ": visited");
-		    					con_head.setIfModifiedSince(StorageFactory.getDatabaseInstance(envPath).getLastModified(url));
-		    					synchronized(sHelper) {
-		    						con_head.connect();
-			    					Thread.sleep(crawlDelay*1000);
-			    				}
-		    					// 304 Not modified
-			    				if (con_head.getResponseCode() == 304) {
-			    					logger.info(url + ": not modified");
-			    					doc = Jsoup.parse(StorageFactory.getDatabaseInstance(envPath).getDocument(url),url);
-			    					content_type = StorageFactory.getDatabaseInstance(envPath).getContentType(url);
-			    				}
-			    				// 200 OK
-			    				else if (con_head.getResponseCode() == 200) {
-			    					// Document too large
-				    				if (con_head.getContentLength() > 1048576 * size)
-				    					throw new Exception(url+": document too large, skip");
-				    				content_type = con_head.getContentType();
-			    				}
-			    				// Others
-			    				else {
-			    					throw new Exception(url + ": " + con_head.getResponseCode());
-			    				}
-		    				}
-		    				// If url has not been visited
-		    				else {
-		    					synchronized(sHelper) {
-		    						con_head.connect();
-			    					Thread.sleep(crawlDelay*1000);
-			    				}
-		    					// 200 OK
-			    				if (con_head.getResponseCode() == 200) {
-			    					// Document too large
-				    				if (con_head.getContentLength() > 1048576 * size)
-				    					throw new Exception(url+": document too large, skip");
-				    				content_type = con_head.getContentType();
-			    				}
-			    				// Others
-			    				else {
-			    					throw new Exception(url + ": " + con_head.getResponseCode());
-			    				}
-		    				}
-		    				
-		    				// HTML document
-		    				if (content_type.contains("text/html")) {	    					
-			    				if (con_head.getResponseCode() != 304) {
-			    					// Get content
-//			    					if (url_info.isSecure()) {
-//				    	    			con_get = (HttpsURLConnection) (new URL(url)).openConnection();
-//				    	    		}
-//				    	    		else {
-//				    	    			con_get = (HttpURLConnection) (new URL(url)).openConnection();
-//				    	    		}
-//				    	    		con_get.setRequestMethod("GET");
-//				    	    		con_get.setRequestProperty("User-Agent", "cis455crawler");
-//				    	    		synchronized(sHelper) {
-//				    	    			logger.info(url + ": downloading");
-//				    	    			con_get.connect();
-//				    	    			Thread.sleep(crawlDelay*1000);
-//				    	    		}
-//			    					BufferedReader br = new BufferedReader(new InputStreamReader(con_get.getInputStream()));
-//			    					StringBuilder sb= new StringBuilder();
-//			    					int c = 0;
-//			    					while (br.ready() && (c = br.read()) != -1) {
-//			    					    sb.append((char)c);
-//			    					}
-			    					
-//			    					WebDriverManager.chromedriver().setup();
-//			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
-//			    			    	System.setProperty("webdriver.chrome.whitelistedIps", "");
-//			    			    	System.setProperty("webdriver.chrome.silentOutput", "true");
-//			    			    	
-//			    			    	ChromeOptions options = new ChromeOptions();
-//			    			    	options.setHeadless(true);
-//			    			    	ChromeDriver driver = new ChromeDriver(options);
-			    			    	
-			    			    	logger.info(url + ": downloading");
-			    			    	driver.get(url);
-			    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
-			    			        
-			    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
-			    			    	
-//			    			    	driver.quit();
-			    					
-			    					// MD5 hash
-			    					md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
-				    				if (StorageFactory.getDatabaseInstance(envPath).containsMd5(md5)) {
-				    					throw new Exception(url + ": document already processed, skip");
-				    				}
-				    				StorageFactory.getDatabaseInstance(envPath).addDocument(url, 
-				    						sb.toString(), 
-				    						md5, 
-				    						con_head.getLastModified(),
-				    						content_type);
-				    				
-				    				incCount();
-				    				logger.info("Finish " + (50000 - count.get()) + " documents");
-				    				
-				    				doc = Jsoup.parse(sb.toString(), url);
-			    				}
-			    				
-			    				links = doc.select("a[href]");
-			    				for (Element link : links) {
-			    					// External link
-//			    					if (!link.attr("abs:href").contains(host)) {
-//			    						logger.info(link.attr("abs:href") + ": external link, skip");
-//			    					}
-//			    					else {
-			    						// Disallow page
-			    						if (isAllow(link.attr("abs:href")) && !StorageFactory.getDatabaseInstance(envPath).containsUrl(link.attr("abs:href"))) {
-			    							queue.add(link.attr("abs:href"));
-			    						}
-			    						else {
-			    							logger.debug(link.attr("abs:href") + ": disallow page, skip");
-			    						}
-//			    					}
-			    				}
-		    				}
-		    				// XML or RSS document
-		    				else if (content_type.contains("text/xml") 
-		    						|| content_type.contains("application/xml") 
-		    						|| content_type.endsWith("+xml")) {
-			    				if (con_head.getResponseCode() != 304) {
-			    					// Get content
-//			    					if (url_info.isSecure()) {
-//				    	    			con_get = (HttpsURLConnection) (new URL(url)).openConnection();
-//				    	    		}
-//				    	    		else {
-//				    	    			con_get = (HttpURLConnection) (new URL(url)).openConnection();
-//				    	    		}
-//				    	    		con_get.setRequestMethod("GET");
-//				    	    		con_get.setRequestProperty("User-Agent", "cis455crawler");
-//				    	    		synchronized(sHelper) {
-//				    	    			logger.info(url + ": downloading");
-//				    	    			con_get.connect();
-//				    	    			Thread.sleep(crawlDelay*1000);
-//				    	    		}
-//			    					BufferedReader br = new BufferedReader(new InputStreamReader(con_get.getInputStream()));
-//			    					StringBuilder sb= new StringBuilder();
-//			    					int c = 0;
-//			    					while (br.ready() && (c = br.read()) != -1) {
-//			    					    sb.append((char)c);
-//			    					}
-			    					
-//			    					WebDriverManager.chromedriver().setup();
-//			    			    	System.setProperty("webdriver.chrome.driver","./chromedriver");
-//			    			    	
-//			    			    	ChromeOptions options = new ChromeOptions();
-//			    			    	options.setHeadless(true);
-//			    			    	ChromeDriver driver = new ChromeDriver(options);
-			    			    	
-			    			    	logger.info(url + ": downloading");
-			    			    	driver.get(url);
-			    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(2000));
-			    			        
-			    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
-			    			    	
-//			    			    	driver.quit();
-			    					
-			    					// MD5 hash
-			    					md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
-				    				if (StorageFactory.getDatabaseInstance(envPath).containsMd5(md5)) {
-				    					throw new Exception(url + ": document already processed, skip");
-				    				}
-				    				StorageFactory.getDatabaseInstance(envPath).addDocument(url, 
-				    						sb.toString(), 
-				    						md5, 
-				    						con_head.getLastModified(),
-				    						content_type);
-				    				
-				    				incCount();
-				    				
-				    				// doc = Jsoup.parse(sb.toString(), url);
-			    				}
-		    				}
-		    				// Others
-		    				else
-		    					throw new Exception(url + ": not HTML, XML or RSS, skip");
-
-		    				// Worker finish
-		    				//incCount();
-		    		        if (count.get() <= 0) {
-		    		        	System.out.println("Worker retrieve enough files, exit");
-	    		        		notifyThreadExited();
-	    	    				break;
-		    		        }
-		    		        
-		    		        driver.quit();
-		    		        
-		    	    	} catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
-		    				e.printStackTrace();
-		    				driver.quit();
-						} catch (Exception e) {
-							logger.warn(e.getMessage());
-							driver.quit();
+	    			
+	    			// If url has been visited
+	    			try {
+						if (StorageFactory.getDatabaseInstance(envPath).containsUrl(url)) {
+							setWorking(false);
+							continue;
 						}
+					} catch (DatabaseException | IllegalArgumentException e) {
+						e.printStackTrace();
+						setWorking(false);
+						continue;
+					}
+	    			
+	    			try {
+						aURL = new URL(url);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+						setWorking(false);
+						continue;
+					}
+	    			
+	    			// robots.txt
+	    			if (!robots.containsKey(aURL.getHost())) {
+		    			try {
+			        		robots.put(aURL.getHost(), Collections.synchronizedList(new ArrayList<String>()));
+			        		if (aURL.getProtocol().equals("https"))
+			        			con_robots = (HttpsURLConnection) (new URL("https://" + aURL.getHost() + "/robots.txt")).openConnection();
+			        		else
+			        			con_robots = (HttpURLConnection) (new URL("http://" + aURL.getHost() + "/robots.txt")).openConnection();
+			        		if (con_robots.getResponseCode() == 200) {
+			    	    		BufferedReader br = new BufferedReader(new InputStreamReader(con_robots.getInputStream()));
+			    	    		while ((line = br.readLine()) != null) {
+			    	    			if (line.startsWith("User-agent") && line.contains("cis455crawler")) {
+			    	    				robots.get(aURL.getHost()).clear();
+			    	    				while ((line = br.readLine()) != null && !line.startsWith("User-agent")) {
+			    	    					if (line.startsWith("Disallow") && !line.equals("Disallow:")) {
+			    	    						robots.get(aURL.getHost()).add(aURL.getHost() + line.substring(line.indexOf(":")+1).trim());
+			    	    					}
+			    	    				}
+			    	    				break;
+			    	    			}
+			    	    			else if (line.startsWith("User-agent") && line.contains("User-agent: *")) {
+			    	    				while ((line = br.readLine()) != null && !line.startsWith("User-agent")) {
+			    	    					if (line.startsWith("Disallow") && !line.equals("Disallow:")) {
+			    	    						robots.get(aURL.getHost()).add(aURL.getHost() + line.substring(line.indexOf(":")+1).trim());
+			    	    					}
+			    	    				}
+			    	    			}
+			    	    		}
+			        		}
+		    			} catch (IOException e) {
+		    				e.printStackTrace();
+		    				continue;
+		    			}
 	    			}
+	    			
+	    	    	try {
+	    	    		driver = new ChromeDriver(options);
+	    	    		
+	    	    		if (aURL.getProtocol().equals("https")) {
+	    	    			con_head = (HttpsURLConnection) aURL.openConnection();
+	    	    		}
+	    	    		else {
+	    	    			con_head = (HttpURLConnection) aURL.openConnection();
+	    	    		}
+	    	    		con_head.setRequestMethod("HEAD");
+	    	    		con_head.setRequestProperty("User-Agent", "cis455crawler");
+	    	    		con_head.connect();
+
+    					// 200 OK
+	    				if (con_head.getResponseCode() == 200) {
+	    					// Document too large
+		    				if (con_head.getContentLength() > 1048576)
+		    					throw new Exception(url+": document too large, skip");
+		    				content_type = con_head.getContentType();
+	    				}
+	    				// Others
+	    				else {
+	    					throw new Exception(url + ": " + con_head.getResponseCode());
+	    				}
+	    				
+	    				// HTML document
+	    				if (content_type.contains("text/html")) {	    					
+	    					// Get content		    			    	
+	    			    	logger.info(url + ": downloading");
+	    			    	driver.get(url);
+	    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
+	    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
+	    			    			    					
+	    					// MD5 hash
+	    					md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
+		    				if (StorageFactory.getDatabaseInstance(envPath).containsMd5(md5)) {
+		    					throw new Exception(url + ": document already processed, skip");
+		    				}
+		    				StorageFactory.getDatabaseInstance(envPath).addDocument(url,sb.toString(),md5,con_head.getLastModified(),content_type);
+		    				
+		    				incCount();
+		    				logger.info("Finish " + count.get() + " documents");
+		    				
+		    				// Extract links
+		    				doc = Jsoup.parse(sb.toString(), url);
+		    				links = doc.select("a[href]");
+		    				for (Element link : links) {
+	    						// Disallow page
+	    						if (isAllow(aURL.getHost(), link.attr("abs:href")) && !StorageFactory.getDatabaseInstance(envPath).containsUrl(link.attr("abs:href"))) {
+	    							queue.add(link.attr("abs:href"));
+	    						}
+	    						else {
+	    							logger.debug(link.attr("abs:href") + ": disallow page, skip");
+	    						}
+		    				}
+	    				}
+	    				// XML or RSS document
+	    				else if (content_type.contains("text/xml") 
+	    						|| content_type.contains("application/xml") 
+	    						|| content_type.endsWith("+xml")) {
+	    					// Get content
+	    			    	logger.info(url + ": downloading");
+	    			    	driver.get(url);
+	    			        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(2000));
+	    			        sb = driver.findElement(By.tagName("html")).getAttribute("outerHTML");
+	    			    		    					
+	    					// MD5 hash
+	    					md5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest(sb.toString().getBytes()));
+		    				if (StorageFactory.getDatabaseInstance(envPath).containsMd5(md5)) {
+		    					throw new Exception(url + ": document already processed, skip");
+		    				}
+		    				StorageFactory.getDatabaseInstance(envPath).addDocument(url, 
+		    						sb.toString(), 
+		    						md5, 
+		    						con_head.getLastModified(),
+		    						content_type);
+		    				
+		    				incCount();
+		    			}
+	    				// Others
+	    				else {
+	    					throw new Exception(url + ": not HTML, XML or RSS, skip");
+	    				}
+	    	    	} catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
+	    				e.printStackTrace();
+					} catch (Exception e) {
+						logger.warn(e.getMessage());
+					} finally {
+						driver.quit();
+					}
 	    			setWorking(false);
     			}
     		});
@@ -402,57 +276,50 @@ public class Crawler implements CrawlMaster {
     	}
     	
     	for (Thread crawlWorker : crawlWorkers) {
-    		exited.decrementAndGet();
     		crawlWorker.start();
     	}
     }
     
-    private boolean isAllow(String url) {
-    	for (String disallow_url : disallow) {
+    private boolean isAllow(String host, String url) {
+    	for (String disallow_url : robots.get(host)) {
 			if (url.startsWith(disallow_url)) {
 				return false;
 			}
 		}
     	return true;
     }
+    
+    public void setStatus(String status) {
+    	this.status = status;
+    }
+    
+    public String getStatus() {
+    	return status;
+    }
+    
+    public void addUrl(String url) {
+    	try {
+			queue.add(0, url);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
 
     /**
      * We've indexed another document
      */
-    @Override
     public void incCount() {
     	count.decrementAndGet();
     }
 
     /**
-     * Workers can poll this to see if they should exit, ie the crawl is done
-     */
-    @Override
-    public boolean isDone() {
-    	if (exited.get() >= Crawler.NUM_WORKERS)
-    		return true;
-    	else
-    		return false;
-    }
-
-    /**
      * Workers should notify when they are processing an URL
      */
-    @Override
     public void setWorking(boolean working) {
     	if (working)
     		logger.debug("Start work");
     	else
     		logger.debug("Finish work");
-    }
-
-    /**
-     * Workers should call this when they exit, so the master knows when it can shut
-     * down
-     */
-    @Override
-    public void notifyThreadExited() {
-    	exited.incrementAndGet();
     }
 
     /**

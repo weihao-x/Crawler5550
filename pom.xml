@@ -170,7 +170,7 @@
 	              </configuration>
 	            </execution>
                 <execution>
-                  <id>web</id>
+                  <id>master</id>
                   <goals><goal>java</goal></goals>
 			    </execution>
 				<execution>
@@ -184,12 +184,18 @@
 	                </arguments>
 	              </configuration>
 			    </execution>
+				<execution>
+                  <id>worker</id>
+                  <goals><goal>java</goal></goals>
+				  <configuration>
+	                <mainClass>edu.upenn.cis.cis455.crawler.Worker</mainClass>
+	              </configuration>
+			    </execution>
               </executions>
               <configuration>
-                <mainClass>edu.upenn.cis.cis455.crawler.WebInterface</mainClass>
+                <mainClass>edu.upenn.cis.cis455.crawler.Master</mainClass>
                 <arguments>
-                  <argument>./database</argument>
-                  <argument>www</argument>
+                  <argument>./master_database</argument>
                 </arguments>
               </configuration>
             </plugin>
