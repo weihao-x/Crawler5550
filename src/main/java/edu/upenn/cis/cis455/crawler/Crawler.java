@@ -99,8 +99,8 @@ public class Crawler {
 		    	System.setProperty("webdriver.chrome.silentLogging", "true");
 		    	
 		    	ChromeOptions options = new ChromeOptions();
+		    	options.addArguments("--no-sandbox");
 		    	options.setHeadless(true);
-		    	options.addArguments("--remote-debugging-port=45555");
 		    	ChromeDriver driver = null;
 		    	
 		    	String sb = null;
