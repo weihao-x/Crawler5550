@@ -56,6 +56,7 @@ public class Master {
         			+ "Url sent: " + String.valueOf(count) + "<br/>\r\n"
         			+ "Url in queue: " + String.valueOf(queue.sharedQueue.size()) + "\r\n"
         			+ "<form action=\"/backup\"><input type=\"submit\" value=\"Backup urls\" /></form>\r\n"
+        			+ "<form action=\"/reload\"><input type=\"submit\" value=\"Reload urls\" /></form>\r\n"
         			+ "<form action=\"/clear\"><input type=\"submit\" value=\"Clear queue\" /></form>\r\n"
         			+ "<h2>Queue</h3>\r\n"
         			+ "<form method=\"POST\" action=\"/add\">\r\n"
@@ -108,6 +109,12 @@ public class Master {
 	    			StorageFactory.getDatabaseInstance(args[0]).backupUrl(url);
 	    		}
 	    	}
+        	res.redirect("/");
+        	return "";
+        });
+        
+        get("/reload", (req, res) -> {
+        	StorageFactory.getDatabaseInstance(args[0]).retrieveUrl(queue);
         	res.redirect("/");
         	return "";
         });
