@@ -16,7 +16,7 @@ public class Worker {
 	static String master = null;
 	
 	public static void main(String args[]) {
-		org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.ALL);
+		org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
 		
 	    port(80);
 	    

@@ -55,13 +55,12 @@ public class Master {
 					for (int i = 0; i < host.length() ; i++) {
 					    hash = hash*31 + host.charAt(i);
 					}
-					logger.info(url + " send to worker " + workers.get(hash % workers.size()) + " via " + "http://" + workers.get(hash % workers.size()) + "/add?url=" + url);
+					logger.info(url + " send to worker " + workers.get(hash % workers.size()));
 					con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
 					con.setRequestMethod("POST");
 					con.setRequestProperty("Content-Type", "application/json");
 					con.getResponseCode();
 					count += 1;
-					logger.info(con.getResponseCode());
 				} catch (InterruptedException | IOException e) {
 					e.printStackTrace();
 					continue;
@@ -75,7 +74,7 @@ public class Master {
 	}
 	
     public static void main(String args[]) {
-    	org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.ALL);
+    	org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
     	
 		if (args.length < 1 || args.length > 2) {
 		    System.out.println("Syntax: Master {database_location} {master_host}");
