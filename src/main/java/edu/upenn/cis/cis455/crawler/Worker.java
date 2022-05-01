@@ -87,7 +87,7 @@ public class Worker {
         			+ "<body>\r\n"
         			+ "<h1>Crawler Worker Status</h1>\r\n"
         			+ "<h2>" + worker + "</h2>\r\n"
-        			+ "Worker is " + status + "<br/>\r\n"
+        			+ "Worker is " + crawler.getStatus() + "<br/>\r\n"
         			+ "Url received: " + String.valueOf(count) + "<br/>\r\n"
         			+ "Url processed: " + String.valueOf(crawler.getCount()) + "\r\n"
         			+ "<form action=\"/start\"><input type=\"submit\" value=\"Start\" /></form>\r\n"
