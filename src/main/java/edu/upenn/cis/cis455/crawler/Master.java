@@ -53,8 +53,10 @@ public class Master {
         			+ "<body>\r\n"
         			+ "<h1>Crawler Master Dashboard</h1>\r\n"
         			+ "<h2>Status</h3>\r\n"
-        			+ "Url sent: " + String.valueOf(count) + "\r\n"
+        			+ "Url sent: " + String.valueOf(count) + "<br/>\r\n"
         			+ "Url in queue: " + String.valueOf(queue.sharedQueue.size()) + "\r\n"
+        			+ "<form action=\"/backup\"><input type=\"submit\" value=\"Backup urls\" /></form>\r\n"
+        			+ "<form action=\"/clear\"><input type=\"submit\" value=\"Clear queue\" /></form>\r\n"
         			+ "<h2>Queue</h3>\r\n"
         			+ "<form method=\"POST\" action=\"/add\">\r\n"
         			+ "Url: <input type=\"text\" name=\"url\"/>\r\n"
@@ -100,12 +102,19 @@ public class Master {
         	return "";
         });
         
-        get("/stop", (req, res) -> {
+        get("/backup", (req, res) -> {
         	synchronized(queue.sharedQueue) {
 	    		for (String url : queue.sharedQueue) {
-	    			StorageFactory.getDatabaseInstance("./data_save").backupUrl(url);
+	    			StorageFactory.getDatabaseInstance(args[0]).backupUrl(url);
 	    		}
 	    	}
+        	res.redirect("/");
+        	return "";
+        });
+        
+        get("/clear", (req, res) -> {
+        	queue.sharedQueue.clear();
+        	res.redirect("/");
         	return "";
         });
         
