@@ -189,6 +189,9 @@
                   <goals><goal>java</goal></goals>
 				  <configuration>
 	                <mainClass>edu.upenn.cis.cis455.crawler.Worker</mainClass>
+					<arguments>
+	                  <argument>./worker_database</argument>
+	                </arguments>
 	              </configuration>
 			    </execution>
               </executions>

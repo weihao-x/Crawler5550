@@ -1,12 +1,14 @@
 package edu.upenn.cis.cis455.crawler;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
 import edu.upenn.cis.cis455.storage.StorageFactory;
-import edu.upenn.cis.cis455.storage.StorageInterface;
 
 import static spark.Spark.*;
 
@@ -29,8 +31,26 @@ public class Master {
 	}
 	
 	public void start() {
+		String url = null;
+		HttpURLConnection con = null;
+		String host = null;
+		int hash = 0;
+		
 		while (workers.size() > 0 && !status.equals("STOP")) {
-			break;
+			try {
+				url = queue.remove(0);
+				hash = 7;
+				host = (new URL(url)).getHost();
+				for (int i = 0; i < host.length() ; i++) {
+				    hash = hash*31 + host.charAt(i);
+				}
+				con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
+				con.setRequestMethod("POST");
+				con.getResponseCode();
+			} catch (InterruptedException | IOException e) {
+				e.printStackTrace();
+				continue;
+			}
 		}
 	}
 	

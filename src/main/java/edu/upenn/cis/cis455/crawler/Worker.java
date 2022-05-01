@@ -9,13 +9,12 @@ import edu.upenn.cis.cis455.storage.StorageFactory;
 public class Worker {
 	static String status = null;
 	static Crawler crawler = null;
+	static String master = null;
 	
 	public static void main(String args[]) {
 		org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
 		
-		staticFileLocation("static");
-		staticFiles.externalLocation("static");
-	    port(45555);
+	    port(80);
 	    
 	    get("/start", (req, res) -> {
 	    	if (crawler.getStatus().equals("IDLE")) {
@@ -57,10 +56,16 @@ public class Worker {
 	    
 	    post("/add", (req, res) -> {
 	    	crawler.addUrl(req.queryParams("url"));
-	    	return "Add successfully!";
+        	return "";
 	    });
 	    
-	    crawler = new Crawler("./data_save");
+	    post("/register", (req, res) -> {
+	    	master = req.queryParams("master");
+	    	res.redirect("http://" + master);
+        	return "";
+	    });
+	    
+	    crawler = new Crawler(args[0]);
 	    
 	    System.out.println("Waiting to handle requests!");
         awaitInitialization();
