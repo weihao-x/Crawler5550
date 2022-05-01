@@ -14,24 +14,6 @@ public class URLQueue {
 	protected ArrayList<String> sharedQueue = new ArrayList<>();
 	int sizeOfQueue = 50000;
 	
-	public void add(int index, String task) throws InterruptedException {
-		logger.trace("Adding element to queue");
-		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() < start+10000 && sharedQueue.size() < sizeOfQueue) {
-			synchronized (sharedQueue) {
-				if (sharedQueue.size() == sizeOfQueue) {
-					logger.trace("Queue is full!");
-					sharedQueue.wait(10000);
-				} else {
-					sharedQueue.add(index, task);
-					logger.trace("Notifying after add " + task);
-					sharedQueue.notifyAll();
-					return;
-				}
-			}
-		}
-	}
-	
 	public void add(String task) throws InterruptedException {
 		logger.trace("Adding element to queue");
 		long start = System.currentTimeMillis();
@@ -52,11 +34,11 @@ public class URLQueue {
 	
 	public String remove(int index) throws InterruptedException {
 		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() < start+10000) {
+		while (System.currentTimeMillis() < start+30000) {
 			synchronized (sharedQueue) {
 				if (sharedQueue.isEmpty()) {
 					logger.trace("Queue is currently empty");
-					sharedQueue.wait(10000);
+					sharedQueue.wait(30000);
 				} else {
 					String task = sharedQueue.remove(0);
 					logger.trace("Notifying everyone we are removing an item");

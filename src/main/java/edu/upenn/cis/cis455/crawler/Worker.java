@@ -37,6 +37,10 @@ public class Worker {
 	    		crawler.setStatus("STOP");
 	    	}
 	    	
+	    	for (int i = 0; i < Crawler.crawlWorkers.size(); i++) {
+	    		crawler.addUrl(null);
+	    	}
+	    	
 	    	for (Thread crawlWorker : Crawler.crawlWorkers) {
 	    		try {
 					crawlWorker.join();
@@ -49,7 +53,9 @@ public class Worker {
 	    	
 	    	synchronized(Crawler.queue.sharedQueue) {
 	    		for (String url : Crawler.queue.sharedQueue) {
-	    			StorageFactory.getDatabaseInstance("./data_save").backupUrl(url);
+	    			if (url != null) {
+	    				StorageFactory.getDatabaseInstance("./data_save").backupUrl(url);
+	    			}
 	    		}
 	    	}
 	    	

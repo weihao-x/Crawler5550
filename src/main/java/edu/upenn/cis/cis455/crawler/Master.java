@@ -60,6 +60,7 @@ public class Master {
 					con.setRequestMethod("POST");
 					con.setRequestProperty("Content-Type", "application/json");
 					con.getResponseCode();
+					count += 1;
 					logger.info(con.getResponseCode());
 				} catch (InterruptedException | IOException e) {
 					e.printStackTrace();
@@ -128,7 +129,7 @@ public class Master {
         });
         
         post("/add", (req, res) -> {
-        	queue.add(0, req.queryParams("url"));
+        	queue.add(req.queryParams("url"));
         	res.redirect("/");
         	return "";
 	    });

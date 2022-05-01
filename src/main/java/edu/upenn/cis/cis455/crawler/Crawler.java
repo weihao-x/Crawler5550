@@ -1,15 +1,11 @@
 package edu.upenn.cis.cis455.crawler;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
@@ -17,15 +13,12 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,20 +29,12 @@ import org.jsoup.select.Elements;
 
 import com.sleepycat.je.DatabaseException;
 
-import edu.upenn.cis.cis455.crawler.utils.URLInfo;
 import edu.upenn.cis.cis455.storage.StorageFactory;
-import edu.upenn.cis.cis455.storage.StorageInterface;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-//import net.lightbody.bmp.BrowserMobProxy;
-//import net.lightbody.bmp.BrowserMobProxyServer;
-//import net.lightbody.bmp.client.ClientUtil;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Proxy;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverLogLevel;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 public class Crawler {
@@ -305,7 +290,7 @@ public class Crawler {
     
     public void addUrl(String url) {
     	try {
-			queue.add(0, url);
+			queue.add(url);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -315,7 +300,7 @@ public class Crawler {
      * We've indexed another document
      */
     public void incCount() {
-    	count.decrementAndGet();
+    	count.incrementAndGet();
     }
 
     /**
