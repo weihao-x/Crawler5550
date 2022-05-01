@@ -7,12 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.storage.StorageFactory;
 
 import static spark.Spark.*;
 
 public class Master {
+	static final Logger logger = LogManager.getLogger(Master.class);
+	
 	static Master master = null;
 	static URLQueue queue = null;
 	static List<String> workers = null;
@@ -48,9 +52,11 @@ public class Master {
 					for (int i = 0; i < host.length() ; i++) {
 					    hash = hash*31 + host.charAt(i);
 					}
+					logger.info(url + " send to worker " + workers.get(hash % workers.size()));
 					con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
 					con.setRequestMethod("POST");
-					con.getResponseCode();
+					//con.getResponseCode();
+					logger.info(con.getResponseCode());
 				} catch (InterruptedException | IOException e) {
 					e.printStackTrace();
 					continue;
