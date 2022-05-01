@@ -16,8 +16,9 @@ public class Master {
 	static Master master = null;
 	static URLQueue queue = null;
 	static List<String> workers = null;
-	String status = null;
+	static String status = null;
 	static int count = 0;
+	static Thread masterThread = null;
 	
 	public Master(String database_location) {
 		queue = new URLQueue();
@@ -31,27 +32,35 @@ public class Master {
 	}
 	
 	public void start() {
-		String url = null;
-		HttpURLConnection con = null;
-		String host = null;
-		int hash = 0;
-		
-		while (workers.size() > 0 && !status.equals("STOP")) {
-			try {
-				url = queue.remove(0);
-				hash = 7;
-				host = (new URL(url)).getHost();
-				for (int i = 0; i < host.length() ; i++) {
-				    hash = hash*31 + host.charAt(i);
+		masterThread = new Thread(()->{
+			status = "RUNNING";
+			
+			String url = null;
+			HttpURLConnection con = null;
+			String host = null;
+			int hash = 0;
+			
+			while (workers.size() > 0 && !status.equals("STOP")) {
+				try {
+					url = queue.remove(0);
+					hash = 7;
+					host = (new URL(url)).getHost();
+					for (int i = 0; i < host.length() ; i++) {
+					    hash = hash*31 + host.charAt(i);
+					}
+					con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
+					con.setRequestMethod("POST");
+					con.getResponseCode();
+				} catch (InterruptedException | IOException e) {
+					e.printStackTrace();
+					continue;
 				}
-				con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
-				con.setRequestMethod("POST");
-				con.getResponseCode();
-			} catch (InterruptedException | IOException e) {
-				e.printStackTrace();
-				continue;
 			}
-		}
+			
+			status = "IDLE";
+		});
+		
+		masterThread.start();
 	}
 	
     public static void main(String args[]) {
@@ -73,11 +82,14 @@ public class Master {
         			+ "<body>\r\n"
         			+ "<h1>Crawler Master Dashboard</h1>\r\n"
         			+ "<h2>Status</h3>\r\n"
+        			+ "Master is " + status + "<br/>\r\n"
         			+ "Url sent: " + String.valueOf(count) + "<br/>\r\n"
         			+ "Url in queue: " + String.valueOf(queue.sharedQueue.size()) + "\r\n"
         			+ "<form action=\"/backup\"><input type=\"submit\" value=\"Backup urls\" /></form>\r\n"
         			+ "<form action=\"/reload\"><input type=\"submit\" value=\"Reload urls\" /></form>\r\n"
         			+ "<form action=\"/clear\"><input type=\"submit\" value=\"Clear queue\" /></form>\r\n"
+        			+ "<form action=\"/start\"><input type=\"submit\" value=\"Start\" /></form>\r\n"
+        			+ "<form action=\"/stop\"><input type=\"submit\" value=\"Stop\" /></form>\r\n"
         			+ "<h2>Queue</h3>\r\n"
         			+ "<form method=\"POST\" action=\"/add\">\r\n"
         			+ "Url: <input type=\"text\" name=\"url\"/>\r\n"
@@ -141,6 +153,20 @@ public class Master {
         
         get("/clear", (req, res) -> {
         	queue.sharedQueue.clear();
+        	res.redirect("/");
+        	return "";
+        });
+        
+        get("/start", (req, res) -> {
+        	if (status.equals("IDLE")) {
+	        	master.start();
+        	}
+        	res.redirect("/");
+        	return "";
+        });
+        
+        get("/stop", (req, res) -> {
+        	status = "STOP";
         	res.redirect("/");
         	return "";
         });
