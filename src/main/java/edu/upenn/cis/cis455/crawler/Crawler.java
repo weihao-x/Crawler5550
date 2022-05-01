@@ -62,6 +62,7 @@ public class Crawler {
     String envPath = null;
     Map<String, List<String>> robots = null;
     protected static URLQueue queue = null;
+    protected String master = null;
 
     public Crawler(String envPath) {
     	status = "IDLE";
@@ -86,6 +87,7 @@ public class Crawler {
     	for (int i = 0; i < Crawler.NUM_WORKERS; i++) {
     		Thread crawlWorker = new Thread(()->{
     			String url = null;
+    			HttpURLConnection con = null;
     			HttpURLConnection con_head = null;
     			HttpURLConnection con_robots = null;
     			Document doc = null;
@@ -229,7 +231,10 @@ public class Crawler {
 		    				for (Element link : links) {
 	    						// Disallow page
 	    						if (isAllow(aURL.getHost(), link.attr("abs:href")) && !StorageFactory.getDatabaseInstance(envPath).containsUrl(link.attr("abs:href"))) {
-	    							queue.add(link.attr("abs:href"));
+	    							con = (HttpURLConnection) (new URL("http://" + master + "/workeradd?url=" + link.attr("abs:href"))).openConnection();
+	    							con.setRequestMethod("POST");
+	    							con.setRequestProperty("Content-Type", "application/json");
+	    							con.getResponseCode();
 	    						}
 	    						else {
 	    							logger.debug(link.attr("abs:href") + ": disallow page, skip");

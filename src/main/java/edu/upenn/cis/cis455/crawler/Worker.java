@@ -61,7 +61,7 @@ public class Worker {
 	    
 	    post("/register", (req, res) -> {
 	    	master = req.queryParams("master");
-	    	res.redirect("http://" + master);
+	    	crawler.master = master;
         	return "";
 	    });
 	    

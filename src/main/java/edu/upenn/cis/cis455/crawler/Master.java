@@ -47,6 +47,9 @@ public class Master {
 			while (workers.size() > 0 && !status.equals("STOP")) {
 				try {
 					url = queue.remove(0);
+					if (url == null) {
+	    				break;
+	    			}
 					hash = 7;
 					host = (new URL(url)).getHost();
 					for (int i = 0; i < host.length() ; i++) {
@@ -127,6 +130,11 @@ public class Master {
         post("/add", (req, res) -> {
         	queue.add(0, req.queryParams("url"));
         	res.redirect("/");
+        	return "";
+	    });
+        
+        post("/workeradd", (req, res) -> {
+        	queue.add(req.queryParams("url"));
         	return "";
 	    });
         
