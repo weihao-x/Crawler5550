@@ -100,7 +100,6 @@ public class Crawler {
 		    	
 		    	ChromeOptions options = new ChromeOptions();
 		    	options.setHeadless(true);
-		    	options.addArguments("--remote-debugging-port=9222");
 		    	ChromeDriver driver = null;
 		    	
 		    	String sb = null;
