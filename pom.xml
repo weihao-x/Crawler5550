@@ -199,6 +199,7 @@
                 <mainClass>edu.upenn.cis.cis455.crawler.Master</mainClass>
                 <arguments>
                   <argument>./master_database</argument>
+				  <argument>54.90.136.133</argument>
                 </arguments>
               </configuration>
             </plugin>
