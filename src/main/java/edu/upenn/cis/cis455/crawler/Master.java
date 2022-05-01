@@ -52,9 +52,10 @@ public class Master {
 					for (int i = 0; i < host.length() ; i++) {
 					    hash = hash*31 + host.charAt(i);
 					}
-					logger.info(url + " send to worker " + workers.get(hash % workers.size()));
+					logger.info(url + " send to worker " + workers.get(hash % workers.size()) + " via " + "http://" + workers.get(hash % workers.size()) + "/add?url=" + url);
 					con = (HttpURLConnection) (new URL("http://" + workers.get(hash % workers.size()) + "/add?url=" + url)).openConnection();
 					con.setRequestMethod("POST");
+					con.connect();
 					//con.getResponseCode();
 					logger.info(con.getResponseCode());
 				} catch (InterruptedException | IOException e) {
