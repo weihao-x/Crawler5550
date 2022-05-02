@@ -26,6 +26,7 @@ public class Worker {
 	static String worker = null;
 	static int count = 0;
 	static int n = 0;
+	static String outputPath = null;
 	
 	public static void main(String args[]) {
 		org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
@@ -115,12 +116,13 @@ public class Worker {
         });
 	    
 	    post("/export", (req, res) -> {
+	    	outputPath = req.queryParams("outputPath");
 	    	new Thread(() -> {
 	    		crawler.setStatus("EXPORTING");
 	    		n = StorageFactory.getDatabaseInstance(args[0]).getCorpusSize();
-	    		if (!Files.exists(Paths.get(req.queryParams("outputPath")))) {
+	    		if (!Files.exists(Paths.get(outputPath))) {
 		            try {
-		                Files.createDirectory(Paths.get(req.queryParams("outputPath")));
+		                Files.createDirectory(Paths.get(outputPath));
 		            } catch (IOException e) {
 		                e.printStackTrace();
 		            }
@@ -129,7 +131,7 @@ public class Worker {
 				for (String url : StorageFactory.getDatabaseInstance(args[0]).allUrls()) {
 					FileWriter myWriter;
 					try {
-						myWriter = new FileWriter(req.queryParams("outputPath") + "/" + 
+						myWriter = new FileWriter(outputPath + "/" + 
 								Hex.encodeHexString(MessageDigest.getInstance("SHA-256").digest(StorageFactory.getDatabaseInstance(args[0]).getDocument(url).getBytes(StandardCharsets.UTF_8))));
 						myWriter.write(url + "\n");
 						myWriter.write(StorageFactory.getDatabaseInstance(args[0]).getDocument(url));
