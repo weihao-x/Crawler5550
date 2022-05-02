@@ -66,7 +66,7 @@ public class Worker {
 		    		Crawler.queue.sharedQueue.clear();
 		    	}
 		    	crawler.setStatus("IDLE");
-	    	});
+	    	}).start();
 	    	
 	    	res.redirect("/");
         	return "";
@@ -97,7 +97,7 @@ public class Worker {
         			+ "<h2>" + worker + "</h2>\r\n"
         			+ "Worker is " + crawler.getStatus() + "<br/>\r\n"
         			+ "Url received: " + String.valueOf(count) + "<br/>\r\n"
-        			+ "Url processed: " + String.valueOf(crawler.getCount()) + "\r\n"
+        			+ "Url processed: " + String.valueOf(crawler.getCount()) + "<br/>\r\n"
         			+ "Document exported last time: " + String.valueOf(n) + "\r\n"
         			+ "<form action=\"/start\"><input type=\"submit\" value=\"Start\" /></form>\r\n"
         			+ "<form action=\"/stop\"><input type=\"submit\" value=\"Stop\" /></form>\r\n"

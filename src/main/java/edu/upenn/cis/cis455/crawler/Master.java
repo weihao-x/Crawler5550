@@ -22,7 +22,6 @@ public class Master {
 	static List<String> workers = null;
 	static String status = null;
 	static int count = 0;
-	static Thread masterThread = null;
 	
 	public Master(String database_location) {
 		queue = new URLQueue();
@@ -36,7 +35,7 @@ public class Master {
 	}
 	
 	public void start() {
-		masterThread = new Thread(()->{
+		new Thread(()->{
 			status = "RUNNING";
 			
 			String url = null;
@@ -68,10 +67,8 @@ public class Master {
 			}
 			
 			status = "IDLE";
-		});
-		
-		masterThread.start();
-	}
+		}).start();
+}
 	
     public static void main(String args[]) {
     	org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.INFO);
