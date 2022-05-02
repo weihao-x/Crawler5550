@@ -110,7 +110,7 @@ public class Master {
         			+ "\r\n";
         	for (String worker : workers) {
         		r += "<a href=\"http://" + worker + "/\">" + worker + "<a>\r\n"
-        				+ "<a href=\"http://localhost:45555/remove?host=" + worker +"\">remove<a>\r\n"
+        				+ "<a href=\"http://" + args[1] + "/remove?host=" + worker +"\">remove<a>\r\n"
         				+ "<br/>";
         	}
         	
