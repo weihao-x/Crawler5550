@@ -46,6 +46,8 @@ public interface StorageInterface {
     public void backupUrl(String url);
     
     public void retrieveUrl(URLQueue queue) throws InterruptedException;
+    
+    public void clearUrl();
 
     /**
      * Shuts down / flushes / closes the storage system

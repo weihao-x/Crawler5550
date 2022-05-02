@@ -130,6 +130,11 @@ public class StorageFactory {
 			        }
 					views.get(directory).getQueueEntrySet().clear();
 				}
+
+				@Override
+				public void clearUrl() {
+					views.get(directory).getQueueEntrySet().clear();
+				}
 	        });
         }
     	
