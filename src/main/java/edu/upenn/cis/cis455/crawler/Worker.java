@@ -99,7 +99,7 @@ public class Worker {
         			+ "Worker is " + crawler.getStatus() + "<br/>\r\n"
         			+ "Url received: " + String.valueOf(count) + "<br/>\r\n"
         			+ "Url processed: " + String.valueOf(crawler.getCount()) + "<br/>\r\n"
-        			+ "Document exported last time: " + String.valueOf(n) + "\r\n"
+        			+ "Document exported: " + String.valueOf(n) + "\r\n"
         			+ "<form action=\"/start\"><input type=\"submit\" value=\"Start\" /></form>\r\n"
         			+ "<form action=\"/stop\"><input type=\"submit\" value=\"Stop\" /></form>\r\n"
         			+ "<h1>Exporter</h1>\r\n"
