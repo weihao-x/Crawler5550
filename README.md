@@ -1,5 +1,9 @@
 # Crawler, for CIS 5550 project
 
+A distributed crawler. 
+* Ready to deploy on EC2, fetching web pages and saving to S3.
+* Support unlimited number of worker nodes, with proper configuration.
+
 ## Prerequisite
 This is a Java Maven project. To install Java and Maven
 ```
