@@ -1,4 +1,4 @@
-# Crawler, for CIS555 project
+# Crawler, for CIS 5550 project
 
 ## Prerequisite
 This is a Java Maven project. To install Java and Maven
